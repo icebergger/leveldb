@@ -30,9 +30,9 @@ else (WIN32)
   set(LEVELDB_PLATFORM_NAME LEVELDB_PLATFORM_POSIX)
 endif (WIN32)
 
-option(LEVELDB_BUILD_TESTS "Build LevelDB's unit tests" ON)
-option(LEVELDB_BUILD_BENCHMARKS "Build LevelDB's benchmarks" ON)
-option(LEVELDB_INSTALL "Install LevelDB's header and library" ON)
+option(LEVELDB_BUILD_TESTS "Build LevelDB's unit tests" OFF)
+option(LEVELDB_BUILD_BENCHMARKS "Build LevelDB's benchmarks" OFF)
+option(LEVELDB_INSTALL "Install LevelDB's header and library" OFF)
 
 include(CheckIncludeFile)
 check_include_file("unistd.h" HAVE_UNISTD_H)
@@ -286,6 +286,8 @@ add_executable(leveldbutil
 )
 target_link_libraries(leveldbutil leveldb)
 
+add_subdirectory("example")
+
 if(LEVELDB_BUILD_TESTS)
   enable_testing()
 
@@ -296,20 +298,20 @@ if(LEVELDB_BUILD_TESTS)
   set(build_gmock ON)
 
   # This project is tested using GoogleTest.
-  add_subdirectory("third_party/googletest")
+#  add_subdirectory("third_party/googletest")
 
   # This project uses Google benchmark for benchmarking.
   set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "" FORCE)
   set(BENCHMARK_ENABLE_EXCEPTIONS OFF CACHE BOOL "" FORCE)
-  add_subdirectory("third_party/benchmark")
+#  add_subdirectory("third_party/benchmark")
 
   # GoogleTest triggers a missing field initializers warning.
-  if(LEVELDB_HAVE_NO_MISSING_FIELD_INITIALIZERS)
-    set_property(TARGET gtest
-        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
-    set_property(TARGET gmock
-        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
-  endif(LEVELDB_HAVE_NO_MISSING_FIELD_INITIALIZERS)
+#  if(LEVELDB_HAVE_NO_MISSING_FIELD_INITIALIZERS)
+#    set_property(TARGET gtest
+#        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
+#    set_property(TARGET gmock
+#        APPEND PROPERTY COMPILE_OPTIONS -Wno-missing-field-initializers)
+#  endif(LEVELDB_HAVE_NO_MISSING_FIELD_INITIALIZERS)
 
   function(leveldb_test test_file)
     get_filename_component(test_target_name "${test_file}" NAME_WE)
